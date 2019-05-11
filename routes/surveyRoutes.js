@@ -1,3 +1,6 @@
+const _ = require('lodash');
+const Path = require('path-parser').default;
+const { URL } = require('url');
 const mongoose = require('mongoose');
 const requireLogin = require('../middlewares/requireLogin');
 const requireCredits = require('../middlewares/requireCredits');
@@ -9,6 +12,27 @@ const Survey = mongoose.model('surveys');
 module.exports = app => {
     app.get('/api/surveys/thanks', (req, res) => {
         res.send('Thanks for your feedback');
+    });
+
+    app.post('/api/surveys/webhooks', (req, res) => {
+        const p = new Path('/api/surveys/:surveyId/:choice');
+        const events = _.chain(req.body)
+            .map(({email, url}) => {
+                // pathname only take the route instead of whole url            
+                // cant destructuring pathname because sometimes it return null
+                const match = p.test(new URL(url).pathname);
+                if (match) {
+                    return { email, surveyId: match.surveyId, choice: match.choice };
+                }
+            })
+            // remove undefined value from elements
+            .compact()
+            // get unique value
+            .uniqBy( 'email', 'surveyId')
+            .value();
+
+        console.log(events);
+        res.send({});
     });
 
     app.post('/api/surveys', requireLogin, requireCredits, async (req, res) => {
