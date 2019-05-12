@@ -10,13 +10,22 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate');
 const Survey = mongoose.model('surveys');
 
 module.exports = app => {
-    app.get('/api/surveys/thanks', (req, res) => {
+    app.get('/api/surveys', requireLogin, async (req, res) => {
+        const surveys = await Survey.find({ _user: req.user.id })
+            .select({ recipients: false });
+
+        res.send(surveys);
+    });
+
+    // :surveyId is wildcard
+    app.get('/api/surveys/:surveyId/:choice', (req, res) => {
         res.send('Thanks for your feedback');
     });
 
     app.post('/api/surveys/webhooks', (req, res) => {
         const p = new Path('/api/surveys/:surveyId/:choice');
-        const events = _.chain(req.body)
+
+        _.chain(req.body)
             .map(({email, url}) => {
                 // pathname only take the route instead of whole url            
                 // cant destructuring pathname because sometimes it return null
@@ -29,9 +38,28 @@ module.exports = app => {
             .compact()
             // get unique value
             .uniqBy( 'email', 'surveyId')
+            .each(({ surveyId, email, choice }) => {
+                Survey.updateOne(
+                    {
+                        // if we use updateOne or other we have to use _id
+                        _id: surveyId,
+                        recipients: {
+                            // find the element that match
+                            $elemMatch: { email: email, responded: false }
+                        }
+                    },
+                    {
+                        // to increment ($inc is mongodb method)
+                        // [choice] will fill for us either yes or no
+                        $inc: { [choice]: 1 },
+                        // $set is mongodb method, recipients got from previous object
+                        $set: { 'recipients.$.responded': true, lastResponded: new Date() },
+                    }
+                // exec the query
+                ).exec();
+            })
             .value();
 
-        console.log(events);
         res.send({});
     });
 
