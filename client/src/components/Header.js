@@ -19,25 +19,27 @@ class Header extends Component {
                         Credits: {this.props.auth.credits}
                     </li>,
                     <li key="2"><a href="/api/logout">Logout</a></li>
-            ];
+                ];
         }
     }
 
     render() {
         return (
-            <nav>
-                <div className="nav-wrapper">
-                    <Link
-                        to={this.props.auth ? '/surveys' : '/'}
-                        className="left brand-logo"
-                    >
-                        Emaily
-                    </Link>
-                    <ul className="right">
-                        {this.renderContent()}
-                    </ul>
-                </div>
-            </nav>
+            <div className="navbar-fixed scrollspy">
+                <nav>
+                    <div className="nav-wrapper darken-1">
+                        <Link
+                            to={this.props.auth ? '/surveys' : '/'}
+                            className="center brand-logo"
+                        >
+                            Emaily
+                        </Link>
+                        <ul className="right">
+                            {this.renderContent()}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         );
     }
 };
