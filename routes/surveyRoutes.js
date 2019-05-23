@@ -92,4 +92,8 @@ module.exports = app => {
         }
         
     });
+
+    app.delete('api/surveys/:id', (req, res) => {
+        res.send(req.body);
+    })
 };

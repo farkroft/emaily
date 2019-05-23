@@ -27,10 +27,10 @@ class Header extends Component {
         return (
             <div className="navbar-fixed scrollspy">
                 <nav>
-                    <div className="nav-wrapper darken-1">
+                    <div className="nav-wrapper darken-1" style={{ marginLeft: "20px" }}>
                         <Link
                             to={this.props.auth ? '/surveys' : '/'}
-                            className="center brand-logo"
+                            className="left brand-logo"
                         >
                             Emaily
                         </Link>

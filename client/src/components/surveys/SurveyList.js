@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchSurveys } from '../../actions';
+import moment from 'moment';
+import * as actions from '../../actions';
 
 class SurveyList extends Component {
     // everytime component rendered, we call fetchSurveys creator
@@ -12,7 +14,7 @@ class SurveyList extends Component {
         if (date) {
             return (
                 <p>
-                    Last Responded: {new Date(date).toLocaleDateString()}
+                    Last Responded: {moment(date).format('DD MMM YYYY')} at {moment(date).format('hh:mm:ss')}
                 </p>
             );
         } else {
@@ -24,6 +26,10 @@ class SurveyList extends Component {
         }
     }
 
+    removeSurvey(arr, id) {
+        console.log(arr);
+    };
+
     renderSurveys() {
         const sentStyled = {
             paddingTop: '8px'
@@ -32,21 +38,26 @@ class SurveyList extends Component {
         return this.props.surveys.reverse().map(survey => {
             return (
                 <div className="card darken-1" key={survey._id}>
-                    <div className="card-content">
+                    <div className="card-content waves-effect waves-block activator">
                         <span className="card-title">{survey.title}</span>
                         <p>
                             {survey.body}
                         </p>
                         <p style={sentStyled}>
-                            Sent On: {new Date(survey.dateSent).toLocaleDateString()}
+                            Sent On: {moment(survey.dateSent).format('DD MMM YYYY')} at {moment(survey.dateSent).format('hh:mm:ss')}
                         </p>
-                        <div className="right">
-                        {this.isResponded(survey.lastResponded)}
+                        <div>
+                            {this.isResponded(survey.lastResponded)}
                         </div>
                     </div>
                     <div className="card-action">
-                        <a>Yes: {survey.yes}</a>
-                        <a>No: {survey.no}</a>
+                        <a href="#">Details</a>
+                    </div>
+                    <div className="card-reveal">
+                        <span className="card-title grey-text text-darken-4 center">Actions<i className="material-icons right">close</i></span>
+                        <div style={{ marginTop: "20px" }}>
+                            <button onClick={() => this.removeSurvey(survey)} className="red btn-flat white-text"><i className="material-icons right">delete</i>Delete</button>
+                        </div>
                     </div>
                 </div>
             );
