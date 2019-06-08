@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { Redirect } from 'react-router-dom';
+import { Router, Route, Link } from 'react-router-dom';
 
 // const Landing = () => {
 //     return (
@@ -16,15 +16,17 @@ import { connect } from 'react-redux';
 // export default Landing;
 
 class Landing extends Component {
-    // componentWillMount(){
-    //     if(this.getToken()){
-    //         this.props.history.push('surveys')
-    //     }
-    // }
+    componentWillMount(){
+        if(this.getToken()){
+            this.props.history.push('/surveys')
+        }
+    }
 
-    // getToken = () => {
-    //     return localStorage.getItem('googleId');
-    // }
+    getToken = () => {
+        if (localStorage.getItem('googleId') !== null || localStorage.getItem('googleId') !== undefined) {
+            return localStorage.getItem('googleId');
+        }
+    }
 
     render() {
         const mailPic = "http://cdn.strategyonline.ca/wp/wp-content/uploads/2015/12/shutterstock_253684528.jpg?85d2f3"
