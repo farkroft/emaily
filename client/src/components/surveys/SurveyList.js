@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { fetchSurveys } from '../../actions';
 import moment from 'moment';
 import * as actions from '../../actions';
+import _ from 'lodash';
 
 class SurveyList extends Component {
     // everytime component rendered, we call fetchSurveys creator
@@ -27,7 +28,9 @@ class SurveyList extends Component {
     }
 
     removeSurvey(arr, id) {
-        console.log(arr);
+        // console.log(id);
+        // console.log(this.props);
+        arr.splice(arr.findIndex(id), 1);
     };
 
     renderSurveys() {
@@ -56,7 +59,7 @@ class SurveyList extends Component {
                     <div className="card-reveal">
                         <span className="card-title grey-text text-darken-4 center">Actions<i className="material-icons right">close</i></span>
                         <div style={{ marginTop: "20px" }}>
-                            <button onClick={() => this.removeSurvey(survey)} className="red btn-flat white-text"><i className="material-icons right">delete</i>Delete</button>
+                            <button onClick={() => this.removeSurvey(survey, survey._id)} className="red btn-flat white-text"><i className="material-icons right">delete</i>Delete</button>
                         </div>
                     </div>
                 </div>

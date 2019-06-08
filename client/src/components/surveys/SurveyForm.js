@@ -21,7 +21,7 @@ class SurveyForm extends Component {
                 {/* this.props.onSurveySubmit() <<< not using parentheses because */}
                 {/* we dont want to the callback function to call instant after render */}
                 {/* but after the user submitted */}
-                <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)}>
+                <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)} style={{ marginBottom: "20px" }}>
                     {this.renderFields()}
                     <Link to="/surveys" className="red btn-flat white-text">
                         Cancel
