@@ -6,9 +6,7 @@ export const fetchUser = () => async dispatch => {
 
 
     const res = await axios.get('/api/current_user');
-    console.log(res.data)
     if (res.data) {
-        console.log('lha')
         dispatch({ type: FETCH_USER, payload: res.data });
         localStorage.setItem('googleId', res.data.googleId)
     } else {
